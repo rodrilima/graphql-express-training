@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import expressGraphQL from 'express-graphql';
+import { graphqlHTTP } from 'express-graphql';
 import mongoose from 'mongoose';
 import routes from './routes/index';
 import Schema from './graphql/index';
@@ -9,7 +9,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use('/graphql', expressGraphQL({
+app.use('/graphql', graphqlHTTP({
     schema: Schema,
     // schema: buildSchema(`type Query { msg: String }`),
     // rootValue: { msg: () => 'Hello world 1231321321312' },
@@ -17,7 +17,10 @@ app.use('/graphql', expressGraphQL({
     pretty: true
 }));
 
-mongoose.connect('mongodb://localhost:27017/graphql', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost:27017/graphql', { 
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 routes(app);
 
